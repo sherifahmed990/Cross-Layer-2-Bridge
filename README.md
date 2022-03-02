@@ -8,8 +8,8 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This project is a cross domain bridge to move token between L2 networks(EVM compatible).
-<a href='https://gitcoin.co/issue/gitcoinco/skunkworks/253/100027342'>Gitcoin bounty</a>
+This project is a cross domain bridge to move token between L2 networks(EVM compatible).<br/>
+<a href='https://gitcoin.co/issue/gitcoinco/skunkworks/253/100027342'>Gitcoin bounty</a><br/>
 <a href='https://notes.ethereum.org/@vbuterin/cross_layer_2_bridges'>Document by @vbuterin descriping the bounty</a>
 
 This project is an implementation for a bridge in a document by @vbuterin with the follwing modification :<br/>
