@@ -4,7 +4,6 @@
   <h3 align="center">Cross Layer 2 Bridge</h3>
 </div>
 
-
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
