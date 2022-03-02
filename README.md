@@ -9,7 +9,7 @@
 
 This project is a cross domain bridge to move tokens between L2 networks (EVM compatible).<br/>
 <a href='https://gitcoin.co/issue/gitcoinco/skunkworks/253/100027342'>Gitcoin bounty</a><br/>
-<a href='https://notes.ethereum.org/@vbuterin/cross_layer_2_bridges'>Document by @vbuterin descriping the bounty</a>
+<a href='https://notes.ethereum.org/@vbuterin/cross_layer_2_bridges'>Document by @vbuterin describing the bounty</a>
 
 This project is an implementation for a bridge descriped in this <a href='https://notes.ethereum.org/@vbuterin/cross_layer_2_bridges'>document by @vbuterin </a> with the following modification :<br/>
 The destination side contract can't confirm the Merkle root of the source side contract transactions so,
@@ -44,7 +44,7 @@ This Project is build with:
 
 - [x] Write Solidity Contracts
 - [x] Deploy Contracts
-- [x] Create a React front end to interacte with the SourceDomainSideBridge
+- [x] Create a React front end to interact with the SourceDomainSideBridge
 - [ ] Completing the frontend for the remaining contracts
 - [ ] Testing
 - [ ] Deploying on the Mainnet
