@@ -35,7 +35,7 @@ A React App as a frontend for the bridge : http://3.20.224.37:3000/ (Still work 
 
 This Project is build with:
 
-* [Solidity](soliditylang.org)
+* [Solidity](https://soliditylang.org)
 * [React.js](https://reactjs.org/)
 * [Brownie](https://eth-brownie.readthedocs.io/)
 
