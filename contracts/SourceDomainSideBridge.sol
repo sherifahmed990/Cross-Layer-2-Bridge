@@ -1,50 +1,70 @@
-//SPDX-License-Identifier: Unlicense
+//SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "./deb/optimism/contracts/L2/messaging/L2CrossDomainMessenger.sol";
 
+
+/// @title SourceDomainSideBridge Contract
+/// @author Sherif Abdelmoatty
+/// @notice This contract is to be deployed in the source rollup
 contract SourceDomainSideBridge {
-    uint constant DEPOSIT_MERKLE_TREE_DEPTH = 10; //this will allow for 1024 deposits
+    uint constant DEPOSIT_MERKLE_TREE_DEPTH = 24; //this will allow for 16777216 deposits
     uint constant MAX_DEPOSIT_COUNT = 2**DEPOSIT_MERKLE_TREE_DEPTH - 1;
     uint constant CONTRACT_FEE_BASIS_POINTS = 5;
     address constant ETHER_ADDRESS = 0x0000000000000000000000000000000000000000;
 
     struct TransferData {
-        address  tokenAddress;
+        address  tokenAddress; 
         address  destination;
         uint256  amount;
         uint256  fee;
         uint256  startTime;
         uint256  feeRampup;
     }
-//    TransferData[] public transactions;
     uint256 public nextTransferID;
-//    uint256 public nextBatchID;
     address[] tokens;
 
-    mapping(bytes32 => bool) validTicket;
+    mapping(bytes32 => bool) validTicket; //a mapping of valid ticket to prevent reentry
     uint256 public lastPaidByTicketId;
-    //uint256 public ticketEnd;
         
-    bytes32[DEPOSIT_MERKLE_TREE_DEPTH] private branch;
+    bytes32[DEPOSIT_MERKLE_TREE_DEPTH] private branch; //Merkle Tree Branch
     bytes32[DEPOSIT_MERKLE_TREE_DEPTH] private zero_hashes;
 
+    address ovmL2CrossDomainMessenger;  //ovmL2CrossDomainMessenger contract address(Optimism)
+    address l1DomainSideContract;  //l1DomainSideContract deployed contract address on mainnet
+
     event Transaction(TransferData transferData,SourceDomainSideBridge current,uint256 nextTransferId);
-    event MerkleTree(bytes32 node);
     event Ticket(bytes32 ticket,address[] tokens,uint256[] amounts,
                 uint256 firstIdForTicket, uint256 lastIdForTicket, bytes32 stateRoot);
 
-    constructor(){
+    /// @notice onlyL1Contract modifier
+    /// @notice only allows a message from l1DomainSideBridge contract through the L2CrossDomainMessenger bridge
+    /// @notice to call the confirmTicketPayed function
+    modifier onlyL1Contract() {
+        require(
+            msg.sender == address(ovmL2CrossDomainMessenger)
+            && L2CrossDomainMessenger(ovmL2CrossDomainMessenger).xDomainMessageSender() == l1DomainSideContract
+        );
+        _;
+    }
+
+    /// @notice Constructior function
+    /// @notice Intialize the zero_hashes array
+    constructor(address _ovmL2CrossDomainMessenger, address _l1DomainSideContract){
         // Compute hashes in empty sparse Merkle tree
         
         for (uint height = 0; height < DEPOSIT_MERKLE_TREE_DEPTH - 1; height++)
             zero_hashes[height + 1] = sha256(abi.encodePacked(zero_hashes[height], zero_hashes[height]));
+
+        ovmL2CrossDomainMessenger = _ovmL2CrossDomainMessenger;
+        l1DomainSideContract = _l1DomainSideContract;
     }
 
+    /// @notice get_deposit_root function
+    /// @notice calculates the current merkle tree root
     function get_deposit_root()  external view returns (bytes32) {
         bytes32 node;
-        //console.log("Next TransferId %d", nextTransferID);
-        //console.log("Max deposit count %d", MAX_DEPOSIT_COUNT);
         uint size = nextTransferID % MAX_DEPOSIT_COUNT;
         //console.log("size %d", size);
         uint count =0;
@@ -55,12 +75,13 @@ contract SourceDomainSideBridge {
                 node = sha256(abi.encodePacked(node, zero_hashes[height]));
             size /= 2;
             count += 1;
-            //console.log(size);
         }
-        //console.log(count);
         return node;
     }
 
+    /// @notice withdraw function
+    /// @notice withdraws the required funds plus fees to be sent 
+    /// @notice to the domain side rollup
     function withdraw(address _tokenAddress, address _destination, uint256 _amount,
         uint256 _fee, uint256 _startTime, uint256 _feeRampup) external payable returns(bytes32){
         TransferData memory _transferData;
@@ -72,7 +93,6 @@ contract SourceDomainSideBridge {
         _transferData.feeRampup = _feeRampup;
 
         uint256 amountPlusFee = _transferData.amount * (1000 + CONTRACT_FEE_BASIS_POINTS);
-        //ERC20 token = ERC20(_transferData.tokenAddress);
         
         if(_transferData.tokenAddress == ETHER_ADDRESS){
             require(msg.value >= amountPlusFee, "Error : Non Suffecient funds!!!!!!!!");
@@ -81,7 +101,6 @@ contract SourceDomainSideBridge {
             token.transferFrom(msg.sender, address(this), amountPlusFee);
         }
         
-        //transactions.push(string(abi.encodePacked(_transferData,address(this),nextTransferID)));
         bytes32 transferDataHash = sha256(abi.encodePacked(_transferData.tokenAddress,_transferData.destination,
                                                             _transferData.amount ,_transferData.fee,
                                                             _transferData.startTime,_transferData.feeRampup));
@@ -98,6 +117,16 @@ contract SourceDomainSideBridge {
         return node;
     }
 
+    /// @notice createTicket function
+    /// @notice to win the bountry you need first to create a ticket
+    /// @notice on the source rollup, which returns a hash of the
+    /// @notice current merkle root, first transaction id and last
+    /// @notice transaction id that the bounty covers
+    /// @notice the bounty seeker needs to deposit all the required
+    /// @notice tokens in a contract in the L1 mainnet, then the L1
+    /// @notice contract sends the tokens to the destination side rollup
+    /// @notice and calls the confirmTicketPayed function in the source
+    /// @notice side rollup, which transfers the bounty to the bounty winner
     function createTicket() external returns(bytes32){
         uint256[] memory tokensAmounts;
         bytes32 ticket;
@@ -115,15 +144,18 @@ contract SourceDomainSideBridge {
         ticket = sha256(abi.encodePacked(ticket,nextTransferID));
         ticket = sha256(abi.encodePacked(ticket,r));
         validTicket[ticket] = true;
-        //lastIdForTicket = nextTransferID;
         emit Ticket(ticket,tokens,tokensAmounts, lastPaidByTicketId, nextTransferID, r);
         return ticket;
     }
 
+    /// @notice confirmTicketPayed function
+    /// @notice this finction is called by the L1 mainnet contract 
+    /// @notice it confirms a valid ticket and transfers the bounty to the bounty winner
     function confirmTicketPayed(bytes32 _ticket, address[] memory _tokens,
                 uint256[] memory _tokensAmounts, uint256 _firstIdForTicket, 
                 uint256 _lastIdForTicket, bytes32 stateRoot,
-                 address payable lp) external{
+                 address payable lp) external onlyL1Contract{
+
         bytes32 ticket;
         for (uint n = 0; n < _tokens.length; n++) {
             ticket = sha256(abi.encodePacked(ticket,_tokens[0], _tokensAmounts[0]));
@@ -147,6 +179,8 @@ contract SourceDomainSideBridge {
         }
     }
 
+    /// @notice getLPFee function
+    /// @notice calculates the liquidity provider fee.
     function getLPFee(TransferData memory _transferData, uint256 _currentTime) private pure returns (uint256) {
         if(_currentTime < _transferData.startTime)
             return 0;
@@ -156,8 +190,10 @@ contract SourceDomainSideBridge {
             return _transferData.fee * (_currentTime - _transferData.startTime); // feeRampup
     }
 
+    /// @notice updateMerkleBranch function
+    /// @notice updates the merkle tree branch in the withdraw function
+    /// @notice using similar logic to the PoS deposit Ethereum contract
     function updateMerkleBranch(bytes32 node) private{
-        
         // Add deposit data root to Merkle tree (update a single `branch` node)
         nextTransferID += 1;
         uint size = nextTransferID % MAX_DEPOSIT_COUNT;

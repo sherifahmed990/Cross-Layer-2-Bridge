@@ -5,7 +5,7 @@ import {getWeb3} from "../getWeb3"
 import {getContract} from "../getContract"
 
 const Form = () => {
-  const {currencies} = useContext(GlobalContext);
+  const {currencies, sourceSideContract} = useContext(GlobalContext);
   const [token, setToken] = useState(currencies[0].address);
   const [amountInput, setAmount] = useState(0);
   const [destinationInput, setDestination] = useState('');
@@ -30,7 +30,7 @@ const Form = () => {
 
     var tx = {
         from: accounts[0],
-        to: "0xD904b21D46603e2B6C606f401C412fE413DcAB74",
+        to: sourceSideContract,
         data: encodedABI,
         //gasPrice: gasPrice
     };
@@ -100,7 +100,7 @@ const Form = () => {
             from: accounts[0],
             to: token,
             data: tokenContract.methods
-              .approve('0xD904b21D46603e2B6C606f401C412fE413DcAB74', value * 1000000)
+              .approve('0x4f7459eFf03cD8C19B5a442d7c9b675A05f66fbf', value * 1000000)
               .encodeABI(),
           },
         ],

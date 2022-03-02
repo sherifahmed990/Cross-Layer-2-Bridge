@@ -37,14 +37,45 @@ export const getContract = async () => {
         
         // Get the current chain id
         const chainid = parseInt(await web3.eth.getChainId())
-
+        
         // <=42 to exclude Kovan, <42 to include kovan
-        if (chainid < 42) {
-          // Wrong Network!
-          return
+        if (ethereum.networkVersion != 69) {
+            try {
+                await ethereum.request({
+                  method: 'wallet_switchEthereumChain',
+                  params: [{ chainId: web3.utils.toHex(69) }],
+                });
+              } catch (switchError) {
+                // This error code indicates that the chain has not been added to MetaMask.
+                if (switchError.code === 4902) {
+                  try {
+                    await ethereum.request({
+                      method: 'wallet_addEthereumChain',
+                      params: [
+                        {
+                            chainId: web3.utils.toHex(69),
+                            chainName: 'Optimism Kovan',
+                            rpcUrls: ['https://kovan.optimism.io'],
+                            blockExplorerUrls: ['https://kovan-optimistic.etherscan.io'],
+                        },
+                      ],
+                    });
+                  } catch (addError) {
+                    console.log(addError)
+                  }
+                }
+                // handle other "switch" errors
+              }
+
         }
       
-      console.log(chainid)
+        const chainIdHex = ethereum.networkVersion;
+        const chainIdDec = await web3.eth.getChainId();
+        console.log('ChainId Hex and decimal')
+        console.log(chainIdHex);
+        console.log('ChainId Hex and decimal2')
+        console.log(chainIdDec);
+        console.log('ChainId Hex and decimal3')
       
       var _chainID = 0;
       if (chainid === 42){
@@ -53,8 +84,11 @@ export const getContract = async () => {
       if (chainid === 1337){
           _chainID = "dev"
       }
+      if (chainid === 69){
+        _chainID = 69;
+    }
       console.log(_chainID)
-      const ssbridge = await loadContract(_chainID,"SourceDomainSideBridge", "0xD904b21D46603e2B6C606f401C412fE413DcAB74")
+      const ssbridge = await loadContract(_chainID,"SourceDomainSideBridge", "0x4f7459eFf03cD8C19B5a442d7c9b675A05f66fbf")
       //let root = await ssbridge.methods.get_deposit_root().call()
       console.log('ssbridge')
       console.log(ssbridge)

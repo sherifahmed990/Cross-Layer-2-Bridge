@@ -8,14 +8,15 @@ const initialState = {
         address:'0x0000000000000000000000000000000000000000'
         },
         {key:1,
-            name:'WBTC',
-        address:'0xD1B98B6607330172f1D991521145A22BCe793277'
+            name:'DAI',
+        address:'0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1'
         },
         {key:2,
             name:'LINK',
-        address:'0xa36085F69e2889c224210F603D836748e7dC0088'
+        address:'0x4911b761993b9c8c0d14ba2d86902af6b0074f5b'
         },
-      ]
+      ],
+      sourceSideContract:'0x4f7459eFf03cD8C19B5a442d7c9b675A05f66fbf'
 }
 
 export const GlobalContext = createContext(initialState);

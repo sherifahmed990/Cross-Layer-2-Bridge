@@ -1,10 +1,13 @@
-import React from "react"
+import React, {useContext} from "react"
 import Tickets from "./Tickets";
 import {getEthereum} from "../getEthereum"
 import {getWeb3} from "../getWeb3"
 import {getContract} from "../getContract"
+import {GlobalContext} from '../context/GlobalState';
+
 
 const SourceRollupBountyPanel = () => {
+    const {sourceSideContract} = useContext(GlobalContext);
 
     let createTicket = async (e) => {
         const ethereum = await getEthereum()
@@ -18,7 +21,7 @@ const SourceRollupBountyPanel = () => {
     
         var tx = {
             from: accounts[0],
-            to: "0xD904b21D46603e2B6C606f401C412fE413DcAB74",
+            to: sourceSideContract,
             data: encodedABI,
             //gasPrice: gasPrice
         };

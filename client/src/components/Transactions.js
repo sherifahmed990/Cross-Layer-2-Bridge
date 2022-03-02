@@ -9,6 +9,7 @@ import {GlobalContext} from '../context/GlobalState';
 
 const Transactions =  () => {
   const[transactions, setTransactions] = useState([]);
+  const[transactionHashs, settransactionHashs] = useState([]);
   const {currencies} = useContext(GlobalContext);
 
 
@@ -18,14 +19,17 @@ const Transactions =  () => {
         let contract =  await getContract()
         console.log(contract)
         let events = await contract.getPastEvents("Transaction", { fromBlock: 1})
-        console.log(events.map((e) =>e['returnValues'][0]))
-        setTransactions(events.map((e) =>e['returnValues'][0]))}
+        console.log(events.map((e) =>e))
+        
+        setTransactions(events.map((e) =>e['returnValues'][0]))
+        settransactionHashs(events.map((e) =>e['transactionHash']))
+      }
       catch(e){
         console.log(e)
       }
     }
     fetchTransactions()
-  }, [])
+  }, [transactions.length])
 
   return (
     
@@ -39,15 +43,17 @@ const Transactions =  () => {
                 <th scope="col">Destination Address</th>
                 <th scope="col">Amount</th>
                 <th scope="col">Status</th>
+                <th scope="col">Link</th>
               </tr>
           </thead>
           <tbody>
-              {transactions.map((transaction,index)=>(
+              {transactions.slice(-10).reverse().map((transaction,index)=>(
                   <tr key={index}>
                     {GetCurrencyName(currencies,transaction[0])}
                     <td>{transaction[1]}</td>
                     <td>{transaction[2]}</td>
                     <td>Pending Bounty</td>
+                    <td><a href={"https://kovan-optimistic.etherscan.io/tx/" + transactionHashs[index]}>Link</a></td>
                   </tr>
               ))}
           </tbody>
@@ -58,7 +64,7 @@ const Transactions =  () => {
 
 function GetCurrencyName(currencies,transaction) {
   return (
-    <td>{currencies.find(currency => currency.address === transaction).name}</td>
+    <td>{currencies.find(currency => currency.address.toLowerCase() === transaction.toLowerCase()).name}</td>
   );
 }
 

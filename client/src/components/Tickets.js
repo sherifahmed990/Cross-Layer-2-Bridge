@@ -6,7 +6,6 @@ import {getEthereum} from "../getEthereum"
 import {getContract} from "../getContract"
 import {GlobalContext} from '../context/GlobalState';
 
-
 const Tickets =  () => {
   const[transactions, setTransactions] = useState([]);
   useEffect(() => {
@@ -25,7 +24,6 @@ const Tickets =  () => {
   }, [])
 
   return (
-    
     <div>
         <h3>Recent Tickets</h3>
         <table className="table table-striped">
@@ -38,7 +36,7 @@ const Tickets =  () => {
               </tr>
           </thead>
           <tbody>
-              {transactions.map((transaction,index)=>(
+              {transactions.slice(-10).reverse().map((transaction,index)=>(
                   <tr key={index}>
                     <td>{transaction['ticket']}</td>
                     <td>{transaction['firstIdForTicket']}</td>
