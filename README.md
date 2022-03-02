@@ -29,7 +29,7 @@ a solution would be to deploy a contract in the mainnet, and the confirmation fl
 * <a href="https://kovan-optimistic.etherscan.io/address/0x4f7459eFf03cD8C19B5a442d7c9b675A05f66fbf">SourceDomainSideBridge(Optimis)</a>
 * <a href="https://kovan-optimistic.etherscan.io/address/0xf67b8dB221236ff53e67a5501ba3d7dfA63d1Df0">DestinationDomainSideBridge(Optimis)</a>
 
-Both SourceDomainSideBridge and DestinationDomainSideBridge are on the same rollup(Optimism) as Arbitrum isn't depolyed in Kovan.<br/>.
+Both SourceDomainSideBridge and DestinationDomainSideBridge are on the same rollup(Optimism) as Arbitrum isn't depolyed in Kovan.<br/>
 A React App as a frontend for the bridge : http://3.20.224.37:3000/ (Still work in progress!)
 
 ### Built With
