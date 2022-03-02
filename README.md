@@ -38,7 +38,6 @@ This Project is build with:
 * [Solidity](soliditylang.org)
 * [React.js](https://reactjs.org/)
 * [Brownie](https://eth-brownie.readthedocs.io/)
-* [Bootstrap](https://getbootstrap.com)
 
 <!-- ROADMAP -->
 ## Roadmap
