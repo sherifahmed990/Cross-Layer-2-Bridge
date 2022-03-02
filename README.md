@@ -33,7 +33,7 @@ A React App as a frontend for the bridge : http://3.20.224.37:3000/ (Still work 
 
 ### Built With
 
-This Project is build with:
+This Project is built with:
 
 * [Solidity](https://soliditylang.org)
 * [React.js](https://reactjs.org/)
