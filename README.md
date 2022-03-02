@@ -12,7 +12,7 @@ This project is a cross domain bridge to move tokens between L2 networks (EVM co
 <a href='https://gitcoin.co/issue/gitcoinco/skunkworks/253/100027342'>Gitcoin bounty</a><br/>
 <a href='https://notes.ethereum.org/@vbuterin/cross_layer_2_bridges'>Document by @vbuterin descriping the bounty</a>
 
-This project is an implementation for a bridge descriped in this <a href='https://notes.ethereum.org/@vbuterin/cross_layer_2_bridges'>document by @vbuterin </a> with the follwing modification :<br/>
+This project is an implementation for a bridge descriped in this <a href='https://notes.ethereum.org/@vbuterin/cross_layer_2_bridges'>document by @vbuterin </a> with the following modification :<br/>
 The destination side contract can't confirm the Merkle root of the source side contract transactions so,
 a solution would be to deploy a contract in the mainnet, and the confirmation flow would be the follwing
 * The LP provide the required tokens for the bounty on the mainnet contract along with the valid Merkle tree root.
