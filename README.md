@@ -8,29 +8,24 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This project is cross domain bridge to move token between L2 networks(EVM compatible).
+This project is a cross domain bridge to move ether and tokens between L2 networks(EVM compatible).
 <a href='https://gitcoin.co/issue/gitcoinco/skunkworks/253/100027342'>Gitcoin bounty</a>
 <a href='https://notes.ethereum.org/@vbuterin/cross_layer_2_bridges'>Document by @vbuterin descriping the bounty</a>
 
-This project is an implementation for bridge in the Document by @vbuterin with the follwing modification :<br/>
-The destination side contract can't confirm the Merkle root of the source side contract transactions so,
-a solution would be to deploy a contract in the mainnet, and the confirmation flow would be the follwing
-* The LP provide the required tokens for the bounty on the mainnet contract along with the valid Merkle tree root.
-* after the contract receives the tokens it sends a message with tokens amounts it received to the source side contract through the rollup bridge contract. 
-* the source side contract confirms the the received funds by hashing the values and comparing it with a "ticket" that
-* the LP have created previously on the source side contract, if confirmed it sends the bounty to the LP
-* the LP should provide a valid data to the contract on the mainnet so that it can receive the bounty on the source side rollup
-* the mainnet contract also sends the tokens with the merkle tree that the LP provided to the destination side contract through the rollup bridge contract
-* If the LP provided wrong information to the mainnet contract , he will not receive the bounty funds and no funds will be missing
-* The destination side contract can receive the funds through the rollup bridge contract along with the merkle tree root 
+## How to use the deployed contracts :
+1-Call the transfer function in the SourceDomainSideBridge contract passing the TransferData struct
+2-A liquidity provider can use the data from the Transaction event emitted from the transfer function to call the claim function at the DestinationDomainSideBridge contract
+3-After 20(TRANSFERS_PER_ONION) claims have been maid at the DestinationDomainSideBridge contract, any LP can call declareNewHashOnionHeadToL1 to send the new hashonion to the L1 contract
+4-After waiting for the challenge period, you can use the optimism sdk to complete the message transfer to the L1 contract
+5-After the declareNewHashOnionHeadToSourcefunction in the L1 contract is called through the Optimism messenger contract, the addNewKnownHashOnion function in the SourceDomainSideBridge contract will be called
+6-Now Any lequedity provider can use the data from the Reward event emmited from the claim function at the DestinationDomainSideBridge contract to call the processClaims function and get payed
 
 ## Deployed Contracts :
-* L1DomainSideBridge (kovan) = "0xc0E0De864A64854359D653db7f79302b78125171"
-* SourceDomainSideBridge(Optimis) = "0x4f7459eFf03cD8C19B5a442d7c9b675A05f66fbf"
-* DestinationDomainSideBridge(Optimis) = "0xf67b8dB221236ff53e67a5501ba3d7dfA63d1Df0"
+* L1DomainSideBridge (kovan) = "0xcd0291CA071Dbd75f1dB8d04D21fc9f2945196A3"
+* SourceDomainSideBridge(OptimismKovan) = "0x04d18666ee55257Ad7f8c3314D5Cce7A30B9921c"
+* DestinationDomainSideBridge(OptimismKovan) = "0x1c2728dc77cC04d071F7a6522539a75CA04a2467"
 
-Both SourceDomainSideBridge and DestinationDomainSideBridge as Arbitrum isn't depolyed in Kovan
-A React App as a frontend for the bridge : http://3.20.224.37:3000/ (Still work in progress!)
+Both SourceDomainSideBridge and DestinationDomainSideBridge are deployed in Optimism as Arbitrum isn't depolyed in Kovan
 
 ### Built With
 
@@ -45,10 +40,9 @@ This Project is build with:
 ## Roadmap
 
 - [x] Write Solidity Contracts
-- [x] Deploy Contracts
-- [x] Create a React Front End to interacte with the SourceDomainSideBridge
-- [ ] Completing the frontend for the bounty and the destination side
-- [ ] Testing
+- [x] Deploy Contracts to Kovan testnet
+- [ ] Create a React Front End App
+- [x] Testing
 - [ ] Deploying on the Mainnet
 
 <!-- LICENSE -->

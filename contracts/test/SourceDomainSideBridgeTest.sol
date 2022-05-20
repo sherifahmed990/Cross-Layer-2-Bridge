@@ -1,13 +1,13 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "./deb/ERC20.sol";
-import "./deb/ICrossDomainMessenger.sol";
+import "../deb/ERC20.sol";
+import "../deb/ICrossDomainMessenger.sol";
 
-/// @title SourceDomainSideBridge Contract
+/// @title SourceDomainSideBridgeTest Contract - modified for testing
 /// @author Sherif Abdelmoatty
 /// @notice This contract is to be deployed in the source rollup
-contract SourceDomainSideBridge {
+contract SourceDomainSideBridgeTest {
 
     address constant ETHER_ADDRESS = 0x0000000000000000000000000000000000000000;
     address constant ovmL2CrossDomainMessenger = 0x4200000000000000000000000000000000000007;  //ovmL2CrossDomainMessenger contract address(Optimism)
@@ -135,7 +135,7 @@ contract SourceDomainSideBridge {
 
     /// @notice this function is only called from the contract at the etherium L1
     /// @notice through the rollup messenger contract to add a new known hash onion
-    function addNewKnownHashOnion(bytes32 _newKnownHashOnions) external onlyL1Contract{
+    function addNewKnownHashOnion(bytes32 _newKnownHashOnions) external{
         knownHashOnions[_newKnownHashOnions] = true;
         emit NewKnownHashOnionAdded(_newKnownHashOnions);
     }

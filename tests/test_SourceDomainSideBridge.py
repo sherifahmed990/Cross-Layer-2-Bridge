@@ -1,54 +1,99 @@
 
-def test_withdraw_emit_event(ssBridge):
-    """
-    Test if the contract will emit an event after a withdrawal
-    """
-    root1 = ssBridge.get_deposit_root()
+import brownie
+from brownie import accounts
 
-    withdraw = ssBridge.withdraw("0x0000000000000000000000000000000000000000",
-    "0xe48D5A8Ebb82d0365Cd734840b6d15e3370ca913", 5,
-       1, 10, 1, {
-           'value': "1 ether"
-       })
-    assert 'Transaction' in withdraw.events
-    
-    """
-    Test if the contract balance will be 1 ether.
-    """
-    assert ssBridge.balance() == "1 ether"
+def test_Source_Contract(ssBridge, dsBridge, token0):
+    balanceBefore = accounts[0].balance()
+    contractBalanceBefore = ssBridge.balance()
 
-    root2 = ssBridge.get_deposit_root()
+    transfer1 = ssBridge.transfer("0x0000000000000000000000000000000000000000",
+        accounts[2], 
+        ".00001 ether", #in kwei
+        10,
+        {
+            'from':accounts[0],
+            'value': ".02 ether"
+        }
+    )
+    transaction1 = transfer1.events['Transaction']['transferData']
 
     """
-    Test if the Merkle root is changed.
+    Test if the contract will emit an event after a transfer
     """
-    assert root1 != root2
-
-def test_withdraw_emit_event(ssBridge,token0):
-    """
-    Test if the contract will emit an event after a withdrawal
-    """
-    root1 = ssBridge.get_deposit_root()
-
-    withdraw = ssBridge.withdraw("0x0000000000000000000000000000000000000000",
-    "0xe48D5A8Ebb82d0365Cd734840b6d15e3370ca913", 5,
-       1, 10, 1, {
-           'value': "1 ether"
-       })
-    assert 'Transaction' in withdraw.events
-    
-    """
-    Test if the contract balance will be 1 ether.
-    """
-    assert ssBridge.balance() == "1 ether"
-
-    root2 = ssBridge.get_deposit_root()
+    assert 'Transaction' in transfer1.events
 
     """
-    Test if the Merkle root is changed.
+    Test will revert if amount higher than maximum amount
     """
-    assert root1 != root2
-    assert token0.totalSupply() == 1
+    with brownie.reverts():
+        transfer1 = ssBridge.transfer("0x0000000000000000000000000000000000000000",
+        accounts[2], 
+        "1 ether", #in kwei(divide by one thousand)
+        10,
+        {
+            'from':accounts[0],
+            'value': ".02 ether"
+        }
+    )
 
+    """
+    Test will revert if no enough ether sent with the transaction
+    """
+    with brownie.reverts():
+        transfer1 = ssBridge.transfer("0x0000000000000000000000000000000000000000",
+        accounts[2], 
+        "1 ether", #in kwei(divid by one thousand)
+        10,
+        {
+            'from':accounts[0],
+            'value': "1 wei"
+        }
+    )
 
+    balanceAfter = accounts[0].balance()
+    contractBalanceAfter = ssBridge.balance()
 
+    """
+    Test if ether is transfered to the contract
+    """
+    assert balanceAfter < balanceBefore
+    assert contractBalanceAfter > contractBalanceBefore
+
+    rewardClaims = []
+    for i in range(1,21):
+        transfer1 = ssBridge.transfer("0x0000000000000000000000000000000000000000",
+            accounts[2], 
+            ".00001 ether", #in kwei(divide by one thousand)
+            10,
+            {
+                'from':accounts[0],
+                'value': ".02 ether"
+            }
+        )
+        transaction1 = transfer1.events['Transaction']['transferData']
+
+        claim1 = dsBridge.claim(transaction1, {
+            'from':accounts[0],
+            'value': "1 ether"
+        })
+
+        rewardClaims.append(claim1.events['Reward']['rewardData'])
+
+    hashonion = claim1.events['NewHashOnionCreated']['hash']
+    print(hashonion)
+
+    addho1 = ssBridge.addNewKnownHashOnion(hashonion)
+
+    """
+    Test if the contract will emit an event after a addNewKnownHashOnion
+    """
+    assert 'NewKnownHashOnionAdded' in addho1.events
+
+    balanceBefore = accounts[0].balance()
+    ssBridge.processClaims(rewardClaims)
+    balanceAfter = accounts[0].balance()
+
+    """
+    Test if ether is transfered to the lp
+    """
+    assert balanceAfter > balanceBefore

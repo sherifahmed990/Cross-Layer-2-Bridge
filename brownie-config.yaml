@@ -21,8 +21,7 @@ networks:
     verify: False
   
   kovan:
-
-    verify: False
+    verify: True
     update_interval: 60
 
 
