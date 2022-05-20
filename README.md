@@ -4,7 +4,6 @@
   <h3 align="center">Cross Layer 2 Bridge</h3>
 </div>
 
-
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
@@ -29,12 +28,11 @@ Both SourceDomainSideBridge and DestinationDomainSideBridge are deployed in Opti
 
 ### Built With
 
-This Project is build with:
+This Project is built with:
 
-* [Solidity](soliditylang.org)
+* [Solidity](https://soliditylang.org)
 * [React.js](https://reactjs.org/)
 * [Brownie](https://eth-brownie.readthedocs.io/)
-* [Bootstrap](https://getbootstrap.com)
 
 <!-- ROADMAP -->
 ## Roadmap
@@ -48,14 +46,14 @@ This Project is build with:
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the MIT License.
 
 <!-- CONTACT -->
 ## Contact
 
 Sherif Abdelmoatty - [@SherifA990](https://twitter.com/SherifA990) - sherif.ahmed990@gmail.com
 
-Project Link: [https://github.com/sherifahmed990/l2-crossdomain-bridge](https://github.com/sherifahmed990/l2-crossdomain-bridge)
+Project Link: [https://github.com/sherifahmed990/l2-crossdomain-bridge](https://github.com/sherifahmed990/Cross-Layer-2-Bridge)
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
