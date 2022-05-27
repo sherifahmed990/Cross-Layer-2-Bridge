@@ -20,9 +20,9 @@ This project is a cross domain bridge to move ether and tokens between L2 networ
 6-Now Any liquedity provider can use the data from the Reward event emmited from the claim function at the DestinationDomainSideBridge contract to call the processClaims function and get payed.</br>
 
 ## Deployed Contracts :
-* L1DomainSideBridge (kovan) = "0xcd0291CA071Dbd75f1dB8d04D21fc9f2945196A3"
-* SourceDomainSideBridge(OptimismKovan) = "0x04d18666ee55257Ad7f8c3314D5Cce7A30B9921c"
-* DestinationDomainSideBridge(OptimismKovan) = "0x1c2728dc77cC04d071F7a6522539a75CA04a2467"
+* <a href="https://kovan.etherscan.io/address/0xcd0291CA071Dbd75f1dB8d04D21fc9f2945196A3">L1DomainSideBridge (kovan)</a> = "0xcd0291CA071Dbd75f1dB8d04D21fc9f2945196A3"
+* <a href="https://kovan-optimistic.etherscan.io/address/0x04d18666ee55257ad7f8c3314d5cce7a30b9921c">SourceDomainSideBridge(OptimismKovan)</a> = "0x04d18666ee55257Ad7f8c3314D5Cce7A30B9921c"
+* <a href="https://kovan-optimistic.etherscan.io/address/0x1c2728dc77cC04d071F7a6522539a75CA04a2467">DestinationDomainSideBridge(OptimismKovan)</a> = "0x1c2728dc77cC04d071F7a6522539a75CA04a2467"
 
 Both SourceDomainSideBridge and DestinationDomainSideBridge are deployed in Optimism as Arbitrum isn't depolyed in Kovan
 
