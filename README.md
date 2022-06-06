@@ -12,12 +12,12 @@ This project is a cross domain bridge to move ether and tokens between L2 networ
 <a href='https://notes.ethereum.org/@vbuterin/cross_layer_2_bridges'>Document by @vbuterin descriping the bounty</a>
 
 ## How to use the deployed contracts :
-1-Call the transfer function in the SourceDomainSideBridge contract passing the TransferData struct.</br>
-2-A liquidity provider can use the data from the Transaction event emitted from the transfer function to call the claim function at the DestinationDomainSideBridge contract.</br>
-3-After 20(TRANSFERS_PER_ONION) claims have been maid at the DestinationDomainSideBridge contract, any LP can call declareNewHashOnionHeadToL1 to send the new hashonion to the L1 contract.</br>
-4-After waiting for the challenge period, you can use the optimism sdk to complete the message transfer to the L1 contract.</br>
-5-After the declareNewHashOnionHeadToSourcefunction in the L1 contract is called through the Optimism messenger contract, the addNewKnownHashOnion function in the SourceDomainSideBridge contract will be called.</br>
-6-Now Any liquedity provider can use the data from the Reward event emmited from the claim function at the DestinationDomainSideBridge contract to call the processClaims function and get payed.</br>
+![1](https://user-images.githubusercontent.com/16766656/172231971-005af37e-b65d-4927-b94f-2070eb726646.jpg)<br/>
+![2](https://user-images.githubusercontent.com/16766656/172231985-fb0364aa-9f54-4fbf-860c-925108507460.jpg)<br/>
+![3](https://user-images.githubusercontent.com/16766656/172231996-aee0846d-d89f-4735-9866-f437535512f9.jpg)<br/>
+![4](https://user-images.githubusercontent.com/16766656/172232009-f0a999a1-6d67-4a23-85cf-a74e58ef065e.jpg)<br/>
+![5](https://user-images.githubusercontent.com/16766656/172232018-caca2b1d-a125-4cdd-8a06-995b0bab5016.jpg)<br/>
+![6](https://user-images.githubusercontent.com/16766656/172232033-a1d7601b-f6e5-4db7-aa69-fa305dc2b857.jpg)<br/>
 
 ## Deployed Contracts :
 * <a href="https://kovan.etherscan.io/address/0xcd0291CA071Dbd75f1dB8d04D21fc9f2945196A3">L1DomainSideBridge (kovan)</a> = "0xcd0291CA071Dbd75f1dB8d04D21fc9f2945196A3"
