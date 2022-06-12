@@ -16,12 +16,13 @@ This project is a cross domain bridge to move ether and tokens between L2 networ
 ![bridge-app](https://user-images.githubusercontent.com/16766656/173221194-f38813f1-d170-4113-82f2-ba42bd2c7d9e.png)
 
 ## How to use the deployed contracts :
-![1](https://user-images.githubusercontent.com/16766656/172231971-005af37e-b65d-4927-b94f-2070eb726646.jpg)<br/>
-![2](https://user-images.githubusercontent.com/16766656/172231985-fb0364aa-9f54-4fbf-860c-925108507460.jpg)<br/>
-![3](https://user-images.githubusercontent.com/16766656/172231996-aee0846d-d89f-4735-9866-f437535512f9.jpg)<br/>
-![4](https://user-images.githubusercontent.com/16766656/172232009-f0a999a1-6d67-4a23-85cf-a74e58ef065e.jpg)<br/>
-![5](https://user-images.githubusercontent.com/16766656/172232018-caca2b1d-a125-4cdd-8a06-995b0bab5016.jpg)<br/>
-![6](https://user-images.githubusercontent.com/16766656/172232033-a1d7601b-f6e5-4db7-aa69-fa305dc2b857.jpg)<br/>
+![1](https://user-images.githubusercontent.com/16766656/173248191-b1713005-b532-4302-af32-8caff81dcb04.png)<br/>
+![2](https://user-images.githubusercontent.com/16766656/173248195-e324b8f6-ff2a-4e24-9d0e-b13da14c5188.png)<br/>
+![3](https://user-images.githubusercontent.com/16766656/173248200-b8b2874a-dffe-4116-9a61-3f9119064f96.png)<br/>
+![4](https://user-images.githubusercontent.com/16766656/173248204-1f1b2766-8374-4c35-b70b-8e9e719dda75.png)<br/>
+![5](https://user-images.githubusercontent.com/16766656/173248207-94cd72d6-0a80-41be-8b07-646fdaeb80ae.png)<br/>
+![6](https://user-images.githubusercontent.com/16766656/173248208-cdb7d7b9-3bbe-4df9-8e85-5ab80ec0a3ac.png)<br/>
+![7](https://user-images.githubusercontent.com/16766656/173248210-e8b1a8e9-5e21-426f-9c9f-644c1d6f83f0.png)<br/>
 
 ## Deployed Contracts :
 * <a href="https://kovan.etherscan.io/address/0x76Df34f51d6bE45F3bC300317E595333bf6F5708">L1DomainSideBridge (kovan)</a> = "0x76Df34f51d6bE45F3bC300317E595333bf6F5708"
@@ -45,6 +46,7 @@ This Project is built with:
 - [x] Deploy Contracts to Kovan testnet
 - [X] Create a NextJs Frontend App
 - [x] Testing
+- [ ] Gas Optimizations
 - [ ] Deploying on the Mainnet
 
 <!-- LICENSE -->
