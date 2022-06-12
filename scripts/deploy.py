@@ -1,8 +1,8 @@
 from brownie import SourceDomainSideBridge, DestinationDomainSideBridge, L1DomainSideBridge, accounts, network
 
-l1DomainSideContract = "0xcd0291CA071Dbd75f1dB8d04D21fc9f2945196A3"
-#  SourceDomainSideBridge deployed at: 0x04d18666ee55257Ad7f8c3314D5Cce7A30B9921c
-#  DestinationDomainSideBridge deployed at: 0x1c2728dc77cC04d071F7a6522539a75CA04a2467
+l1DomainSideContract = "0x76Df34f51d6bE45F3bC300317E595333bf6F5708"
+#  SourceDomainSideBridge deployed at: 0x4bC39CDa64831Fa385CFc855A28B24B3EEF86704
+#  DestinationDomainSideBridge deployed at: 0x472D0CdC3336234b0685fcCbC5F5BC072eF6370B
 def main():
     # requires brownie account to have been created
     if network.show_active()=='development':

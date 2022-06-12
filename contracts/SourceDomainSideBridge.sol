@@ -13,7 +13,7 @@ contract SourceDomainSideBridge {
     address constant ovmL2CrossDomainMessenger = 0x4200000000000000000000000000000000000007;  //ovmL2CrossDomainMessenger contract address(Optimism)
 
     uint constant public CONTRACT_FEE_BASIS_POINTS = 5; //fee basis points
-    uint constant public FIXED_FEE = 3000 gwei;         //fixed fee - this is added as erc20 tokens value are unknown and to discorage small transactions and acts as a governance fee
+    uint constant public FIXED_FEE = 3002 gwei;         //fixed fee - this is added as erc20 tokens value are unknown and to discorage small transactions and acts as a governance fee
     uint constant public MAX_TRADE_LIMIT = 0.1 ether;   //max allowed ether to be transfered
 
     struct TransferData {
@@ -70,7 +70,7 @@ contract SourceDomainSideBridge {
 
     /// @notice transfer the required funds plus fees to be sent to the current contract balance
     function transfer(address _tokenAddress, address _destination, uint256 _amount,
-         uint256  _feeRampup) external payable returns(bytes32){
+        uint256  _feeRampup) external payable returns(bytes32){
         
         uint256 fee = _amount * CONTRACT_FEE_BASIS_POINTS;
         uint256 amountPlusFee = _amount * 1000 + fee;
@@ -89,14 +89,14 @@ contract SourceDomainSideBridge {
         TransferData memory transferData;
         transferData.tokenAddress = _tokenAddress;
         transferData.destination = _destination;
-        transferData.amount = _amount;
+        transferData.amount = _amount * 1000;
         transferData.fee = fee;
         transferData.startTime = block.number;
         transferData.feeRampup = _feeRampup;
         transferData.nonce = currentNonce;
 
         currentNonce++;
-        governanceBalance = governanceBalance + FIXED_FEE;
+        governanceBalance = governanceBalance + FIXED_FEE/2;
 
         bytes32 transferDataHash = sha256(abi.encode(transferData));
         
@@ -117,14 +117,14 @@ contract SourceDomainSideBridge {
             if(validTransferHashes[_rewardData[n].transferDataHash]){
                 bool success;
                 if(_rewardData[n].tokenAddress == ETHER_ADDRESS){
-                    (bool suc, ) = payable(_rewardData[n].claimer).call{value: _rewardData[n].amountPlusFee}("");
+                    (bool suc, ) = payable(_rewardData[n].claimer).call{value: _rewardData[n].amountPlusFee + FIXED_FEE/2}("");
                     success = suc;
                 }else{
-                    ERC20 token = ERC20(_rewardData[n].tokenAddress);  
+                    ERC20 token = ERC20(_rewardData[n].tokenAddress);
                     success = token.transferFrom(address(this), _rewardData[n].claimer,
                         _rewardData[n].amountPlusFee);
 
-                    (bool suc, ) = payable(_rewardData[n].claimer).call{value: FIXED_FEE}("");
+                    (bool suc, ) = payable(_rewardData[n].claimer).call{value: FIXED_FEE/2}("");
 
                     success = success && suc;
                 }
@@ -138,6 +138,10 @@ contract SourceDomainSideBridge {
     function addNewKnownHashOnion(bytes32 _newKnownHashOnions) external onlyL1Contract{
         knownHashOnions[_newKnownHashOnions] = true;
         emit NewKnownHashOnionAdded(_newKnownHashOnions);
+    }
+
+    function GetGovernanceBalance() external view onlyGovernance returns(uint256){
+        return governanceBalance;
     }
 
     function collectGovernanceFixedFees() external onlyGovernance{

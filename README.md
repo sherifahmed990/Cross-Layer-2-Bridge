@@ -10,6 +10,8 @@
 This project is a cross domain bridge to move ether and tokens between L2 networks(EVM compatible).
 <a href='https://gitcoin.co/issue/gitcoinco/skunkworks/253/100027342'>Gitcoin bounty</a>
 <a href='https://notes.ethereum.org/@vbuterin/cross_layer_2_bridges'>Document by @vbuterin descriping the bounty</a>
+## NextJs Frontend App :
+<a href="https://kovan.etherscan.io/address/0x76Df34f51d6bE45F3bC300317E595333bf6F5708">Link to NextJs Frontend App</a> 
 
 ## How to use the deployed contracts :
 ![1](https://user-images.githubusercontent.com/16766656/172231971-005af37e-b65d-4927-b94f-2070eb726646.jpg)<br/>
@@ -20,9 +22,9 @@ This project is a cross domain bridge to move ether and tokens between L2 networ
 ![6](https://user-images.githubusercontent.com/16766656/172232033-a1d7601b-f6e5-4db7-aa69-fa305dc2b857.jpg)<br/>
 
 ## Deployed Contracts :
-* <a href="https://kovan.etherscan.io/address/0xcd0291CA071Dbd75f1dB8d04D21fc9f2945196A3">L1DomainSideBridge (kovan)</a> = "0xcd0291CA071Dbd75f1dB8d04D21fc9f2945196A3"
-* <a href="https://kovan-optimistic.etherscan.io/address/0x04d18666ee55257ad7f8c3314d5cce7a30b9921c">SourceDomainSideBridge(OptimismKovan)</a> = "0x04d18666ee55257Ad7f8c3314D5Cce7A30B9921c"
-* <a href="https://kovan-optimistic.etherscan.io/address/0x1c2728dc77cC04d071F7a6522539a75CA04a2467">DestinationDomainSideBridge(OptimismKovan)</a> = "0x1c2728dc77cC04d071F7a6522539a75CA04a2467"
+* <a href="https://kovan.etherscan.io/address/0x76Df34f51d6bE45F3bC300317E595333bf6F5708">L1DomainSideBridge (kovan)</a> = "0x76Df34f51d6bE45F3bC300317E595333bf6F5708"
+* <a href="https://kovan-optimistic.etherscan.io/address/0x4bC39CDa64831Fa385CFc855A28B24B3EEF86704">SourceDomainSideBridge(OptimismKovan)</a> = "0x4bC39CDa64831Fa385CFc855A28B24B3EEF86704"
+* <a href="https://kovan-optimistic.etherscan.io/address/0x472D0CdC3336234b0685fcCbC5F5BC072eF6370B">DestinationDomainSideBridge(OptimismKovan)</a> = "0x472D0CdC3336234b0685fcCbC5F5BC072eF6370B"
 
 Both SourceDomainSideBridge and DestinationDomainSideBridge are deployed in Optimism as Arbitrum isn't depolyed in Kovan
 
@@ -39,7 +41,7 @@ This Project is built with:
 
 - [x] Write Solidity Contracts
 - [x] Deploy Contracts to Kovan testnet
-- [ ] Create a React Front End App
+- [X] Create a NextJs Frontend App
 - [x] Testing
 - [ ] Deploying on the Mainnet
 

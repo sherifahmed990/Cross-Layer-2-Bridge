@@ -33,7 +33,7 @@ contract DestinationDomainSideBridge {
 
     mapping(bytes32 => bool) claimedTransferHashes;
     uint256 indexReportedHashOnion;
-    event Reward(RewardData rewardData);
+    event Reward(RewardData rewardData, uint nonce);
     event NewHashOnionCreated(bytes32 hash);
     event NewHashOnionDeclaredToL1(bytes32 hash);
 
@@ -45,7 +45,7 @@ contract DestinationDomainSideBridge {
         l1DomainSideContractAddress = _l1DomainSideContractAddress;
     }
 
-    /// @notice lequidity providers can provide lequidity to be transfered to the 
+    /// @notice liquidity providers can provide lequidity to be transfered to the 
     /// @notice destination address and register a claim to the lequidity fee
     function claim(TransferData memory _transferData) external payable{
         bytes32 transferDataHash = sha256(abi.encode(_transferData));
@@ -62,7 +62,7 @@ contract DestinationDomainSideBridge {
         rewardData.amountPlusFee = lPfee + _transferData.amount;
         rewardHashOnion = sha256(abi.encode(rewardHashOnion, rewardData));
 
-        emit Reward(rewardData);
+        emit Reward(rewardData, _transferData.nonce);
         claimCount++;
 
         if(claimCount % TRANSFERS_PER_ONION == 0){
