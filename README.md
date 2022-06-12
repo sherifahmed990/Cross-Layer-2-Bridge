@@ -1,8 +1,9 @@
 <!-- PROJECT LOGO -->
-![bridge](https://user-images.githubusercontent.com/16766656/173248396-850440c1-6d33-4c49-a34e-554a7a5383fb.png)
-<br />
 <div align="center">
-  <h3 align="center">Cross Layer 2 Bridge</h3>
+<img src="https://user-images.githubusercontent.com/16766656/173248396-850440c1-6d33-4c49-a34e-554a7a5383fb.png" height =200/>
+</div>
+<div align="center">
+  <h1 align="center">Cross Layer 2 Bridge</h1>
 </div>
 
 <!-- ABOUT THE PROJECT -->
