@@ -28,9 +28,9 @@ This project is a cross domain bridge to move ether and tokens between L2 networ
 ![8](https://user-images.githubusercontent.com/16766656/173249749-497f2cff-6f7f-4c9c-af48-42a3267311c7.png)
 
 ## Deployed Contracts :
-* <a href="https://kovan.etherscan.io/address/0x76Df34f51d6bE45F3bC300317E595333bf6F5708">L1DomainSideBridge (kovan)</a> = "0x76Df34f51d6bE45F3bC300317E595333bf6F5708"
-* <a href="https://kovan-optimistic.etherscan.io/address/0x4bC39CDa64831Fa385CFc855A28B24B3EEF86704">SourceDomainSideBridge(OptimismKovan)</a> = "0x4bC39CDa64831Fa385CFc855A28B24B3EEF86704"
-* <a href="https://kovan-optimistic.etherscan.io/address/0x472D0CdC3336234b0685fcCbC5F5BC072eF6370B">DestinationDomainSideBridge(OptimismKovan)</a> = "0x472D0CdC3336234b0685fcCbC5F5BC072eF6370B"
+* <a href="https://kovan.etherscan.io/address/0xF3A7EDf172C66427D8284f19f6c62Be1a738Fb33">L1DomainSideBridge (kovan)</a> = "0xF3A7EDf172C66427D8284f19f6c62Be1a738Fb33"
+* <a href="https://kovan-optimistic.etherscan.io/address/0x6Fa32eE1871631717b7898A8C41Bc851Bf07b3e5">SourceDomainSideBridge(OptimismKovan)</a> = "0x6Fa32eE1871631717b7898A8C41Bc851Bf07b3e5"
+* <a href="https://kovan-optimistic.etherscan.io/address/0x2A22D002f4BBA380502071E0D152d5D10A5281B5">DestinationDomainSideBridge(OptimismKovan)</a> = "0x2A22D002f4BBA380502071E0D152d5D10A5281B5"
 
 Both SourceDomainSideBridge and DestinationDomainSideBridge are deployed in Optimism as Arbitrum isn't depolyed in Kovan
 
