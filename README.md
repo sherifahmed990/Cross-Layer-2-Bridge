@@ -10,12 +10,19 @@
 ## About The Project
 
 This project is a cross domain bridge to move ether and tokens between L2 networks(EVM compatible).<br/>
-<a href='https://gitcoin.co/issue/gitcoinco/skunkworks/253/100027342'>Gitcoin bounty</a>
+<a href='https://gitcoin.co/issue/gitcoinco/skunkworks/253/100027342'>Gitcoin bounty</a><br/>
 <a href='https://notes.ethereum.org/@vbuterin/cross_layer_2_bridges'>Document by @vbuterin descriping the bounty</a>
 ## Frontend App :
 <a href="https://cross-l2-bridge-app.vercel.app/">Link to the deployed Frontend App</a> 
 
 ![bridge-app](https://user-images.githubusercontent.com/16766656/173221194-f38813f1-d170-4113-82f2-ba42bd2c7d9e.png)
+
+## Video Demo :
+
+
+https://user-images.githubusercontent.com/16766656/173265210-b9a03af5-4b62-459a-a183-fc103bec821b.mp4
+
+
 
 ## How to use the deployed contracts :
 ![1](https://user-images.githubusercontent.com/16766656/173248191-b1713005-b532-4302-af32-8caff81dcb04.png)<br/>
