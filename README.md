@@ -13,7 +13,7 @@ This project is a cross domain bridge to move ether and tokens between L2 networ
 <a href='https://gitcoin.co/issue/gitcoinco/skunkworks/253/100027342'>Gitcoin bounty</a><br/>
 <a href='https://notes.ethereum.org/@vbuterin/cross_layer_2_bridges'>Document by @vbuterin descriping the bounty</a>
 ## Frontend App :
-<a href="https://cross-l2-bridge-app.vercel.app/">Link to the deployed Frontend App</a> 
+<a href="https://cross-l2-bridge-app.vercel.app/">Link to the deployed Frontend App</a> <br/>
 <a href="https://github.com/sherifahmed990/Cross-L2-Bridge-App">Frontend App Github Page</a> 
 
 ![bridge-app](https://user-images.githubusercontent.com/16766656/173221194-f38813f1-d170-4113-82f2-ba42bd2c7d9e.png)
