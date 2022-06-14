@@ -2,7 +2,7 @@
 project_structure:
     build: client/src/artifacts
 
-      
+
 # automatically fetch contract sources from Etherscan
 autofetch_sources: True
 dotenv: .env
@@ -31,14 +31,3 @@ wallets:
 
 # enable output of development artifacts to load with react
 dev_deployment_artifacts: true
-
-dependencies:
-  - OpenZeppelin/openzeppelin-contracts@4.5.0
-  - OpenZeppelin/openzeppelin-contracts-upgradeable@4.5.0
-
-compiler:
-  solc:
-    remappings:
-      - '@openzeppelin/contracts-upgradeable=OpenZeppelin/openzeppelin-contracts-upgradeable@4.5.0/contracts/'
-      - '@openzeppelin=OpenZeppelin/openzeppelin-contracts@4.5.0'
-#      - '@openzeppelin-upgradeable=OpenZeppelin/openzeppelin-contracts-upgradeable@4.5.0'

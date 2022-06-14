@@ -14,6 +14,7 @@ This project is a cross domain bridge to move ether and tokens between L2 networ
 <a href='https://notes.ethereum.org/@vbuterin/cross_layer_2_bridges'>Document by @vbuterin descriping the bounty</a>
 ## Frontend App :
 <a href="https://cross-l2-bridge-app.vercel.app/">Link to the deployed Frontend App</a> 
+<a href="https://github.com/sherifahmed990/Cross-L2-Bridge-App">Frontend App Github Page</a> 
 
 ![bridge-app](https://user-images.githubusercontent.com/16766656/173221194-f38813f1-d170-4113-82f2-ba42bd2c7d9e.png)
 
@@ -35,9 +36,9 @@ https://user-images.githubusercontent.com/16766656/173265210-b9a03af5-4b62-459a-
 ![8](https://user-images.githubusercontent.com/16766656/173249749-497f2cff-6f7f-4c9c-af48-42a3267311c7.png)
 
 ## Deployed Contracts :
-* <a href="https://kovan.etherscan.io/address/0xF3A7EDf172C66427D8284f19f6c62Be1a738Fb33">L1DomainSideBridge (kovan)</a> = "0xF3A7EDf172C66427D8284f19f6c62Be1a738Fb33"
-* <a href="https://kovan-optimistic.etherscan.io/address/0x6Fa32eE1871631717b7898A8C41Bc851Bf07b3e5">SourceDomainSideBridge(OptimismKovan)</a> = "0x6Fa32eE1871631717b7898A8C41Bc851Bf07b3e5"
-* <a href="https://kovan-optimistic.etherscan.io/address/0x2A22D002f4BBA380502071E0D152d5D10A5281B5">DestinationDomainSideBridge(OptimismKovan)</a> = "0x2A22D002f4BBA380502071E0D152d5D10A5281B5"
+* <a href="https://kovan.etherscan.io/address/0x8F0F1538e04BD1f61D94BeAd25f2606dBDee203f">L1DomainSideBridge (kovan)</a> = "0x8F0F1538e04BD1f61D94BeAd25f2606dBDee203f"
+* <a href="https://kovan-optimistic.etherscan.io/address/0xBb7D1032371486eef0A5e17Ff0279be14078F3E4">SourceDomainSideBridge(OptimismKovan)</a> = "0xBb7D1032371486eef0A5e17Ff0279be14078F3E4"
+* <a href="https://kovan-optimistic.etherscan.io/address/0x33323F2B2D204DBa2A55341D099c5bA6B3C952e5">DestinationDomainSideBridge(OptimismKovan)</a> = "0x33323F2B2D204DBa2A55341D099c5bA6B3C952e5"
 
 Both SourceDomainSideBridge and DestinationDomainSideBridge are deployed in Optimism as Arbitrum isn't depolyed in Kovan
 
@@ -69,11 +70,8 @@ Distributed under the MIT License.
 
 Sherif Abdelmoatty - [@SherifA990](https://twitter.com/SherifA990) - sherif.ahmed990@gmail.com
 
-Project Link: [https://github.com/sherifahmed990/l2-crossdomain-bridge](https://github.com/sherifahmed990/Cross-Layer-2-Bridge)
-
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
 * <a href='https://gitcoin.co/issue/gitcoinco/skunkworks/253/100027342'>Gitcoin bounty</a>
 * <a href='https://notes.ethereum.org/@vbuterin/cross_layer_2_bridges'>Document by @vbuterin descriping the bounty</a>
-* <a href='https://etherscan.io/address/0x00000000219ab540356cbb839cbe05303d7705fa'>Ethereum 2.0 deposit contract</a>

@@ -1,8 +1,10 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.13;
 
 import "./deb/ERC20.sol";
 import "./deb/ICrossDomainMessenger.sol";
+import "./deb/StructLib.sol";
+
 
 /// @title DestinationDomainSideBridge Contract
 /// @author Sherif Abdelmoatty
@@ -14,26 +16,9 @@ contract DestinationDomainSideBridge {
     uint256 public claimCount;
     uint256 constant TRANSFERS_PER_ONION = 20;
 
-    struct TransferData {
-        address  tokenAddress; 
-        address  destination;
-        uint256  amount;
-        uint256  fee;
-        uint256  startTime;
-        uint256  feeRampup; //to incentivise lp's to transfer this transaction quickly
-        uint256  nonce;
-    }
-
-    struct RewardData {
-        bytes32  transferDataHash;
-        address  tokenAddress; 
-        address  claimer;
-        uint256  amountPlusFee;
-    }
-
-    mapping(bytes32 => bool) claimedTransferHashes;
-    uint256 indexReportedHashOnion;
-    event Reward(RewardData rewardData, uint nonce);
+    mapping(bytes32 => bool) claimedTransferHashes; //mapping of claimed transfer hashes sent to the destination address
+    uint256 indexReportedHashOnion; //number of reported hahs onions
+    event Reward(StructLib.RewardData rewardData, uint nonce);
     event NewHashOnionCreated(bytes32 hash);
     event NewHashOnionDeclaredToL1(bytes32 hash);
 
@@ -45,17 +30,18 @@ contract DestinationDomainSideBridge {
         l1DomainSideContractAddress = _l1DomainSideContractAddress;
     }
 
-    /// @notice liquidity providers can provide lequidity to be transfered to the 
-    /// @notice destination address and register a claim to the lequidity fee
-    function claim(TransferData memory _transferData) external payable{
+    /// @notice liquidity providers can provide liquidity to be transfered to the 
+    /// @notice destination address and register a claim to the liquidity fee
+    /// @param _transferData struct emitted from the Transaction event at the source contract
+    function claim(StructLib.TransferData memory _transferData) external payable{
         bytes32 transferDataHash = sha256(abi.encode(_transferData));
         require(!claimedTransferHashes[transferDataHash], "Transfer already claimed!!!");
         claimedTransferHashes[transferDataHash] = true;
 
-        uint256 lPfee = getLPFee(_transferData, block.timestamp);
+        uint256 lPfee = getLPFee(_transferData);
         _transferData.amount = _transferData.amount + (lPfee - _transferData.fee);
 
-        RewardData memory rewardData;
+        StructLib.RewardData memory rewardData;
         rewardData.transferDataHash = transferDataHash;
         rewardData.tokenAddress = _transferData.tokenAddress;
         rewardData.claimer = msg.sender;
@@ -81,7 +67,7 @@ contract DestinationDomainSideBridge {
     }
     
     /// @notice sends new hash onions one by one to the l1 side contract to be sent to the source side contract
-    /// @notice this function is rollup dependant - Optimism Kovn
+    /// @notice this function is rollup dependant - Optimism Kovan
     function declareNewHashOnionHeadToL1() external{
         require(indexReportedHashOnion < rewardHashOnionHistoryList.length, "No new hash onions to report.");
         
@@ -99,12 +85,16 @@ contract DestinationDomainSideBridge {
     }
 
     /// @notice calculates the liquidity provider fee based on the feeRampup
-    function getLPFee(TransferData memory _transferData, uint256 _currentTime) private pure returns (uint256) {
-        require(_currentTime >= _transferData.startTime, "Error : currentTime is less than startTime");
+    /// @param _transferData struct emitted from the Transaction event at the source contract
+    /// @return the calculated fee
+    function getLPFee(StructLib.TransferData memory _transferData) private view returns (uint256) {
+        uint256 currentTime = block.number;
 
-        if(_currentTime >= _transferData.startTime + _transferData.feeRampup)
+        require(currentTime >= _transferData.startTime, "Error : block number is less than startTime");
+
+        if(currentTime >= _transferData.startTime + _transferData.feeRampup)
             return _transferData.fee;
         else
-            return _transferData.fee * (_currentTime - _transferData.startTime); // feeRampup
+            return _transferData.fee * (currentTime - _transferData.startTime); // feeRampup
     }
 }

@@ -1,8 +1,9 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.13;
 
 import "./deb/ERC20.sol";
 import "./deb/ICrossDomainMessenger.sol";
+import "./deb/StructLib.sol";
 
 /// @title SourceDomainSideBridge Contract
 /// @author Sherif Abdelmoatty
@@ -10,38 +11,21 @@ import "./deb/ICrossDomainMessenger.sol";
 contract SourceDomainSideBridge {
 
     address constant ETHER_ADDRESS = 0x0000000000000000000000000000000000000000;
-    address constant ovmL2CrossDomainMessenger = 0x4200000000000000000000000000000000000007;  //ovmL2CrossDomainMessenger contract address(Optimism)
+    address constant ovmL2CrossDomainMessenger = 0x4200000000000000000000000000000000000007;  //ovmL2CrossDomainMessenger contract address(Optimism Kovan)
 
     uint constant public CONTRACT_FEE_BASIS_POINTS = 5; //fee basis points
-    uint constant public FIXED_FEE = 3002 gwei;         //fixed fee - this is added as erc20 tokens value are unknown and to discorage small transactions and acts as a governance fee
-    uint constant public MAX_TRADE_LIMIT = 0.1 ether;   //max allowed ether to be transfered
+    uint constant public FIXED_FEE = 3002 gwei;         //fixed fee - to discourage small transactions, and acts as a governance fee
+    uint constant public MAX_TRADE_LIMIT = 0.1 ether;   //max allowed tokens to be transfered
 
-    struct TransferData {
-        address  tokenAddress; //rollup dependent
-        address  destination;
-        uint256  amount;       //amount to be transfered in kwei
-        uint256  fee;
-        uint256  startTime;
-        uint256  feeRampup;
-        uint256  nonce;
-    }
-
-    struct RewardData {
-        bytes32  transferDataHash;
-        address  tokenAddress; 
-        address  claimer;
-        uint256  amountPlusFee;
-    }
-
-    mapping(bytes32 => bool) public validTransferHashes;
-    mapping(bytes32 => bool) public knownHashOnions;
-    bytes32 processedRewardHashOnion;
+    mapping(bytes32 => bool) public validTransferHashes; //mapping of valid transfer hashes
+    mapping(bytes32 => bool) public knownHashOnions;    //mapping of known hash onions
+    bytes32 processedRewardHashOnion;     //the last known hash onion
     address l1DomainSideContractAddress;  //l1DomainSideContract deployed contract address on mainnet
-    uint256  currentNonce;
-    address public governance;
-    uint256 governanceBalance;
+    uint256  currentNonce;                //the number of transfer created
+    address public governance;            //governance address - only to collect governance fees
+    uint256 governanceBalance;            //governance balance
 
-    event Transaction(TransferData transferData);
+    event Transaction(StructLib.TransferData transferData);
     event ClaimPayed(bytes32 transferDataHash, bool success);
     event NewKnownHashOnionAdded(bytes32 newKnownHashOnions);
     
@@ -62,15 +46,21 @@ contract SourceDomainSideBridge {
         _;
     }
 
-    /// @param _l1DomainSideContractAddress is the address of the contract in etherium L1
+    /// @param _l1DomainSideContractAddress is the address of the contract in etherium/kovan L1
     constructor(address _l1DomainSideContractAddress){
         l1DomainSideContractAddress = _l1DomainSideContractAddress;
         governance = msg.sender;
     }
 
     /// @notice transfer the required funds plus fees to be sent to the current contract balance
+    /// @param _tokenAddress at destination rollup
+    /// @param _destination is reciever address at the destination rollup
+    /// @param _amount is amount to be transfered in kwei
+    /// @param _startTime is a blocknumber in the future that this transaction can only be executed after
+    /// @param _feeRampup will be multiplied by the fee ramp up if the LP claimed and sent the transfer by the startTime block, and will decrease by one for each block after that
+    /// @return the hash of the valid transfer
     function transfer(address _tokenAddress, address _destination, uint256 _amount,
-        uint256  _feeRampup) external payable returns(bytes32){
+        uint256  _startTime, uint256  _feeRampup) external payable returns(bytes32){
         
         uint256 fee = _amount * CONTRACT_FEE_BASIS_POINTS;
         uint256 amountPlusFee = _amount * 1000 + fee;
@@ -86,12 +76,16 @@ contract SourceDomainSideBridge {
             require(msg.value >= FIXED_FEE, "No Suffecient ether for the fixed ether fee");
         }
 
-        TransferData memory transferData;
+        StructLib.TransferData memory transferData;
         transferData.tokenAddress = _tokenAddress;
         transferData.destination = _destination;
         transferData.amount = _amount * 1000;
         transferData.fee = fee;
-        transferData.startTime = block.number;
+        if(_startTime < block.number){
+            transferData.startTime = block.number;
+        }else{
+            transferData.startTime = _startTime;
+        }
         transferData.feeRampup = _feeRampup;
         transferData.nonce = currentNonce;
 
@@ -108,8 +102,8 @@ contract SourceDomainSideBridge {
     }
 
     /// @notice process the processClaims structs to be paid to the liquidity providers
-    /// @param _rewardData is an array of RewardData structs to be paid to liquidity providers
-    function processClaims(RewardData[] memory _rewardData) external payable {
+    /// @param _rewardData is an array of RewardData structs to be paid to liquidity providers(emitted by the destination contract)
+    function processClaims(StructLib.RewardData[] memory _rewardData) external payable {
         bytes32 newProcessedRewardHashOnion = calculateNewProcessedRewardHashOnion(_rewardData);
         require(knownHashOnions[newProcessedRewardHashOnion], "Invalide RewardData list.");
         processedRewardHashOnion = newProcessedRewardHashOnion;
@@ -121,8 +115,7 @@ contract SourceDomainSideBridge {
                     success = suc;
                 }else{
                     ERC20 token = ERC20(_rewardData[n].tokenAddress);
-                    success = token.transferFrom(address(this), _rewardData[n].claimer,
-                        _rewardData[n].amountPlusFee);
+                    success = token.transfer(_rewardData[n].claimer, _rewardData[n].amountPlusFee);
 
                     (bool suc, ) = payable(_rewardData[n].claimer).call{value: FIXED_FEE/2}("");
 
@@ -140,17 +133,22 @@ contract SourceDomainSideBridge {
         emit NewKnownHashOnionAdded(_newKnownHashOnions);
     }
 
+    /// @notice get governance balance
+    /// @return governance balance
     function GetGovernanceBalance() external view onlyGovernance returns(uint256){
         return governanceBalance;
     }
 
+    /// @notice collect governance fees
     function collectGovernanceFixedFees() external onlyGovernance{
         payable(governance).transfer(governanceBalance);
         governanceBalance = 0;
     }
 
     /// @notice calculates the new hash onion
-    function calculateNewProcessedRewardHashOnion(RewardData[] memory _rewardData) private view returns (bytes32){
+    /// @param _rewardData is an array of RewardData structs to be paid to liquidity providers(emitted by the destination contract)
+    /// @return hash onion
+    function calculateNewProcessedRewardHashOnion(StructLib.RewardData[] memory _rewardData) private view returns (bytes32){
         bytes32 newProcessedRewardHashOnion = processedRewardHashOnion;
         for(uint n = 0; n < _rewardData.length; n++) {
             newProcessedRewardHashOnion = 
